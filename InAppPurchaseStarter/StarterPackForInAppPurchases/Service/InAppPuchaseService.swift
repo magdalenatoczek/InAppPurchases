@@ -9,10 +9,10 @@
 //---------------------------------------------------------------------------------------------------------------------------------------------//
 // must have a full developer account
 // appstoreconnect.apple.com / itunesconnect.apple.com -> myApps -> plus -> new App -> name -> bundle
-//provide app id for specific types of payment "bundle + name inAppPurchase" and save it in constants (productID)
+// provide app id for specific types of payment "bundle + name inAppPurchase" and save it in constants (productID)
 // Features -> In-App Purchases -> plus -> choose type -> productID -> pice -> localization - possible translation into many languages -> SAVE
 // My Apps -> Users and Roles -> Sandbox Testers -> plus -> fill in the data
-//xCode : - capabilities - turn on in app purchase
+// xCode : - capabilities - turn on in app purchase
 // provide a button to restore status of payment (when user change phone, reinstall app)
 //---------------------------------------------------------------------------------------------------------------------------------------------//
 
