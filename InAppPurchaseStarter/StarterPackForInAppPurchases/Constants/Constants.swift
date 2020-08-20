@@ -8,5 +8,14 @@
 
 import Foundation
 
-let FIRST_TYPE_PRODUCT_ID = "bundle.nameOfTheFirsttypePurchase"
-let SECOND_TYPE_PRODUCT_ID = "bundle.nameOfTheSecondTypePurchase"
+
+ // FOR NOTIFICATION
+
+let notificationPurchaseFromInAppService = "notificationPurchaseFromInAppService"
+let notificationRestoreFromInAppService = "notificationRestoreFromInAppService"
+let notificationFailureFromInAppService = "notificationFailureFromInAppService"
+
+
+
+
+

@@ -9,43 +9,113 @@
 import UIKit
 
 
-class ExampleVC: UIViewController, InAppPuchaseServiceDelegate  {
+class ExampleVC: UIViewController {
+    
+    
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let purchaseStatus = UserDefaults.standard.bool(forKey: ProductType.exampleBuyNonConsumable.rawValue)
+        if purchaseStatus {
+          //  showHideContentAndAdjustTheView()
+        }
+      
+        NotificationCenter.default.addObserver(self, selector: #selector(handlePurchase(_:)), name: NSNotification.Name(notificationPurchaseFromInAppService), object: nil)
         
-        //check if the payment was made - from UserDefaults ->  let purchaseStatus = UserDefaults.standard.bool(forKey: productID)
-        //if purchaseStatus true showContent()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleFailure(_:)), name: NSNotification.Name(notificationFailureFromInAppService), object: nil)
         
         
+        NotificationCenter.default.addObserver(self, selector: #selector(handleRestore(_:)), name: NSNotification.Name(notificationRestoreFromInAppService), object: nil)
         
-        InAppPuchaseService.INSTANCE.delegate = self
-        InAppPuchaseService.INSTANCE.loadProducts()
+    
+    }
 
-        // Do any additional setup after loading the view.
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+        
     }
     
-    func productLoaded(){
-            print("product loaded correctly")
+    
+    @objc func handlePurchase(_ notification: Notification){
+        
+        guard let productId = notification.object as? String else { return }
+        
+        switch productId {
+        case ProductType.exampleBuyConsumable.rawValue:
+             //  buyButton.isEnabled = true //to protect cliking multiple times during buy operation
+            break
+        case ProductType.exampleBuyNonConsumable.rawValue:
+            UserDefaults.standard.set(true, forKey: productId)
+            
+            
+            break
+            
+        default:
+            break
+            
+        }
+        
+        
     }
+    
+    @objc func handleRestore(_ notification: Notification){
+         
+         guard let productId = notification.object as? String else { return }
+         
+         switch productId {
+         case ProductType.exampleBuyNonConsumable.rawValue:
+             UserDefaults.standard.set(true, forKey: productId)
+             //  showHideContentAndAdjustTheView()
+             break
+         default:
+             break
+             
+         }
 
+     }
+    
+    
+    
+    
+    
+    
+    @objc func handleFailure(_ notification: Notification){
+    //  buyButton.isEnabled = true //to protect cliking multiple times during buy operation
+    //  hideAdsButton.isEnabled = true
+        print("purchaseFailed!")
+           
+       }
+    
 
+// EXAMPLE BUTTONS
   
 //@IBAction
 func buyButtonPressed(_sender: Any){
-    InAppPuchaseService.INSTANCE.purchaseForItem(productIndex: .firstProductType)
+  //  buyButton.isEnabled = false //to protect cliking multiple times during buy operation
+    InAppPuchaseService.INSTANCE.makePurchaseForItem(forProductId: ProductType.exampleBuyConsumable.rawValue)
+ 
 }
 
+//IBAction
+func hideAds(_sender: Any) {
+        //hideAdsButton.isEnabled = false
+        InAppPuchaseService.INSTANCE.makePurchaseForItem(forProductId: ProductType.exampleBuyNonConsumable.rawValue)
 
+    }
 
 //@IBAction
 func restoreButton(_sender: Any){
-    
-    
+    InAppPuchaseService.INSTANCE.restore()
 
 }
 
 
+
+  
+    
 
 }

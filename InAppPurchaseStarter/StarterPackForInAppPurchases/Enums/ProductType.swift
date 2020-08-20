@@ -9,8 +9,11 @@
 import Foundation
 
 
-enum ProductType : Int {
+enum ProductType : String {
     
-    case firstProductType = 0
-    case secondProductType = 1
+    
+    case exampleBuyConsumable = "com.popeqapps.inapppurchasestarter.firstType"
+    case exampleBuyNonConsumable  = "com.popeqapps.inapppurchasestarter.secondType"
+    
+
 }

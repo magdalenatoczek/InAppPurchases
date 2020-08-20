@@ -22,105 +22,92 @@
 import Foundation
 import StoreKit
 
-protocol InAppPuchaseServiceDelegate {
-    func productLoaded()
-}
 
 
-class InAppPuchaseService: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
+class InAppPuchaseService: NSObject, SKPaymentTransactionObserver {
    
 
 static let INSTANCE = InAppPuchaseService()
-var productsIDs = Set<String>()
-var productRequest = SKProductsRequest()
-var products = [SKProduct]()
-var delegate : InAppPuchaseServiceDelegate?
 
-
-func loadProducts(){
-  changeProductIDToStringSet()
-  requestProducts(setOfString : productsIDs)
-}
-
-
-func changeProductIDToStringSet(){
-  productsIDs.insert(FIRST_TYPE_PRODUCT_ID)
-  productsIDs.insert(SECOND_TYPE_PRODUCT_ID)
-}
-
-
-func requestProducts(setOfString : Set<String>){
-  productRequest.cancel()
-    productRequest = SKProductsRequest(productIdentifiers : productsIDs)
-  productRequest.delegate = self
-  productRequest.start()
-}
-
-
-    func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse){
-    self.products = response.products
-
-    if products.count == 0 {
-      requestProducts(setOfString :productsIDs)
-    } else{
-      delegate?.productLoaded()
-
-    }
-
-}
-
-func purchaseForItem(productIndex : ProductType){
+    
+    
+    func makePurchaseForItem(forProductId productID : String){
     
     if SKPaymentQueue.canMakePayments() {
-        
-        
-//    other way
-//               let payment = SKMutablePayment()
-//               payment.productIdentifier = (FIRST_TYPE_PRODUCT_ID)
-//               SKPaymentQueue.default().add(payment)
-        
 
-            let product = products[productIndex.rawValue]
-            let payment = SKPayment(product: product)
-            SKPaymentQueue.default().add(payment)
+        let payment = SKMutablePayment()
+        payment.productIdentifier = productID
+        SKPaymentQueue.default().add(payment)
     }
     else{
          print("User can't make payments")
     }
-
-
 }
+    
+    
+    
+    func restore(){
+      SKPaymentQueue.default().restoreCompletedTransactions()
+        
+      }
 
-
-
+    
+    
 func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
   
     for transaction in transactions{
        switch transaction.transactionState{
           case .purchased:
-
-                 print("Transaction successful!")
-                 SKPaymentQueue.default().finishTransaction(transaction)
-            break
+                print("Transaction successful!")
+                SKPaymentQueue.default().finishTransaction(transaction)
+                sendNotification(forStatus: .purchased, identifier: transaction.payment.productIdentifier)
+                break
+        
           case .restored:
-            break
+                print("Transaction restored!")
+                SKPaymentQueue.default().finishTransaction(transaction)
+                sendNotification(forStatus: .restored, identifier: transaction.payment.productIdentifier)
+                break
+        
           case .failed:
-            break
+                print("Transaction failed!")
+                SKPaymentQueue.default().finishTransaction(transaction)
+                sendNotification(forStatus: .failed, identifier: nil)
+                break
+        
           case .deferred:
             break
+        
           case .purchasing:
             break
-        default :
-        print("fatal error")
-        break
-    
         
+        default :
+        break
+
+        }
         }
 
-}
-
-    
       }
+    
 
+    //sending notification with status to vc => vc need observer
+    func sendNotification(forStatus status: PurchaseStatus, identifier: String?){
+        
+        switch status{
+        case .purchased:
+            NotificationCenter.default.post(name: NSNotification.Name(notificationPurchaseFromInAppService), object: identifier)
+            break
+            
+        case .restored:
+            NotificationCenter.default.post(name: NSNotification.Name(notificationRestoreFromInAppService), object: identifier)
+            break
+            
+        case .failed:
+            NotificationCenter.default.post(name: NSNotification.Name(notificationFailureFromInAppService), object: nil)
+            break
+
+            
+        }
+    }
 }
 
