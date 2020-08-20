@@ -28,6 +28,10 @@ class InAppPuchaseService: NSObject, SKPaymentTransactionObserver {
    
 
 static let INSTANCE = InAppPuchaseService()
+    
+    var expirationDate = UserDefaults.standard.value(forKey: "expirationDate") as! Date
+    
+    
 
     
     
@@ -60,19 +64,24 @@ func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SK
           case .purchased:
                 print("Transaction successful!")
                 SKPaymentQueue.default().finishTransaction(transaction)
-                sendNotification(forStatus: .purchased, identifier: transaction.payment.productIdentifier)
+                completed(transaction: transaction)
+                
+                uploadReceipt { (valid) in
+                    
+                }
+                
                 break
         
           case .restored:
                 print("Transaction restored!")
                 SKPaymentQueue.default().finishTransaction(transaction)
-                sendNotification(forStatus: .restored, identifier: transaction.payment.productIdentifier)
+                sendNotification(forStatus: .restored, identifier: transaction.payment.productIdentifier, orBoolean: nil)
                 break
         
           case .failed:
                 print("Transaction failed!")
                 SKPaymentQueue.default().finishTransaction(transaction)
-                sendNotification(forStatus: .failed, identifier: nil)
+                sendNotification(forStatus: .failed, identifier: nil, orBoolean: nil)
                 break
         
           case .deferred:
@@ -89,9 +98,27 @@ func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SK
 
       }
     
+    
+    func completed(transaction: SKPaymentTransaction){
+        switch transaction.payment.productIdentifier{
+            
+        case ProductType.exampleBuyConsumable.rawValue:
+            sendNotification(forStatus: .purchased, identifier: transaction.payment.productIdentifier, orBoolean: nil)
+            break
+            
+        case ProductType.exampleOfAutoRenewingSubscription.rawValue:
+              sendNotification(forStatus: .subscribed, identifier: transaction.payment.productIdentifier, orBoolean: true)
+            break
+        default:
+            break
+        }
+        
+        
+    }
+    
 
     //sending notification with status to vc => vc need observer
-    func sendNotification(forStatus status: PurchaseStatus, identifier: String?){
+    func sendNotification(forStatus status: PurchaseStatus, identifier: String?, orBoolean bool :Bool?){
         
         switch status{
         case .purchased:
@@ -105,9 +132,93 @@ func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SK
         case .failed:
             NotificationCenter.default.post(name: NSNotification.Name(notificationFailureFromInAppService), object: nil)
             break
+            
+        case .subscribed:
+            NotificationCenter.default.post(name: NSNotification.Name(notificationSubscribeChangeInAppService), object: bool)
+            break
 
             
         }
     }
+    
+    
+    func isSubscriptionActive(completionHandler: @escaping (Bool) -> Void){
+        let nowDate = Date()
+        
+        
+        
+        
+    }
+    
+    
+    
+    //PREVENT FROM STEALING checking if purchase is real
+    
+    func uploadReceipt(completionHandler: @escaping (Bool) -> Void){
+        
+        guard let receiptUrl = Bundle.main.appStoreReceiptURL, let receipt = try? Data(contentsOf: receiptUrl).base64EncodedString() else {
+            completionHandler(false)
+            return
+        }
+        
+        let body = [
+            "receipt-data": receipt,
+            "password": " longStringGenereted"  //goto itunesConnect ->MyApps -> InAppPurchases -> Ap-Specific SharedSecret -> Generate -make a constant from it
+            
+        ]
+        
+        let bodyData = try! JSONSerialization.data(withJSONObject: body, options: [])
+        
+        let url = URL(string: "https://sandbox.itunes.apple.com/verifyReceipt")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.httpBody = bodyData
+        
+        let task = URLSession.shared.dataTask(with: request) {(responseData, response, error) in
+            
+            if let error = error {
+                debugPrint(error)
+                completionHandler(false)
+                
+            }else if let responseData = responseData {
+                
+                let json = try! JSONSerialization.jsonObject(with: responseData, options: []) as! Dictionary <String,Any>
+                print(json)
+                
+                let newExpirationDate = self.expirationDate(jsonResponse: json)
+                
+                UserDefaults.standard.set(newExpirationDate, forKey: "expirationDate")
+                
+                
+                completionHandler(true)
+
+            }
+            
+            
+        }
+        task.resume()
+
+    }
+    
+    
+    
+    func expirationDate(jsonResponse: Dictionary<String,Any>) -> Date?{
+        
+        if let receiptInfo: NSArray = jsonResponse["latest_receipt_info"] as? NSArray {
+            let lastReceipt = receiptInfo.lastObject as! Dictionary<String, Any>
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:dd VV"
+            let expiesDataAsString = lastReceipt["expires_date"] as! String
+
+            let expirationDate: Date = formatter.date(from: expiesDataAsString)!
+            
+            return expirationDate
+        }else{
+            return nil
+        }
+        
+        
+    }
+    
 }
 

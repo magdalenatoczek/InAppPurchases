@@ -13,7 +13,8 @@
 		AA0A1AEF24ED77DA00A39095 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA0A1AED24ED77DA00A39095 /* Main.storyboard */; };
 		AA0A1AF124ED77DB00A39095 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0A1AF024ED77DB00A39095 /* Assets.xcassets */; };
 		AA0A1AF424ED77DB00A39095 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA0A1AF224ED77DB00A39095 /* LaunchScreen.storyboard */; };
-		AAE20A7324ED806F003B1DD8 /* ExampleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE20A7224ED806F003B1DD8 /* ExampleVC.swift */; };
+		AABAB5FF24EEC5A5002ECD66 /* ExampleSubscriptionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABAB5FE24EEC5A5002ECD66 /* ExampleSubscriptionVC.swift */; };
+		AAE20A7324ED806F003B1DD8 /* ExampleConsumableAndNonConsumableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE20A7224ED806F003B1DD8 /* ExampleConsumableAndNonConsumableVC.swift */; };
 		AAE20A7524ED808C003B1DD8 /* InAppPuchaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE20A7424ED808C003B1DD8 /* InAppPuchaseService.swift */; };
 		AAE20A7724ED817A003B1DD8 /* PurchaseStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE20A7624ED817A003B1DD8 /* PurchaseStatus.swift */; };
 		AAE20A7924ED81C1003B1DD8 /* ProductType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE20A7824ED81C1003B1DD8 /* ProductType.swift */; };
@@ -29,7 +30,8 @@
 		AA0A1AF024ED77DB00A39095 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA0A1AF324ED77DB00A39095 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AA0A1AF524ED77DB00A39095 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		AAE20A7224ED806F003B1DD8 /* ExampleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleVC.swift; sourceTree = "<group>"; };
+		AABAB5FE24EEC5A5002ECD66 /* ExampleSubscriptionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleSubscriptionVC.swift; sourceTree = "<group>"; };
+		AAE20A7224ED806F003B1DD8 /* ExampleConsumableAndNonConsumableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleConsumableAndNonConsumableVC.swift; sourceTree = "<group>"; };
 		AAE20A7424ED808C003B1DD8 /* InAppPuchaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppPuchaseService.swift; sourceTree = "<group>"; };
 		AAE20A7624ED817A003B1DD8 /* PurchaseStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseStatus.swift; sourceTree = "<group>"; };
 		AAE20A7824ED81C1003B1DD8 /* ProductType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductType.swift; sourceTree = "<group>"; };
@@ -109,7 +111,8 @@
 		AA0A1B0024ED785B00A39095 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				AAE20A7224ED806F003B1DD8 /* ExampleVC.swift */,
+				AAE20A7224ED806F003B1DD8 /* ExampleConsumableAndNonConsumableVC.swift */,
+				AABAB5FE24EEC5A5002ECD66 /* ExampleSubscriptionVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -194,12 +197,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				AAE20A7724ED817A003B1DD8 /* PurchaseStatus.swift in Sources */,
+				AABAB5FF24EEC5A5002ECD66 /* ExampleSubscriptionVC.swift in Sources */,
 				AAE20A7924ED81C1003B1DD8 /* ProductType.swift in Sources */,
 				AA0A1AEC24ED77DA00A39095 /* ViewController.swift in Sources */,
 				AA0A1AE824ED77DA00A39095 /* AppDelegate.swift in Sources */,
 				AAE20A7524ED808C003B1DD8 /* InAppPuchaseService.swift in Sources */,
 				AA0A1AEA24ED77DA00A39095 /* SceneDelegate.swift in Sources */,
-				AAE20A7324ED806F003B1DD8 /* ExampleVC.swift in Sources */,
+				AAE20A7324ED806F003B1DD8 /* ExampleConsumableAndNonConsumableVC.swift in Sources */,
 				AAE20A7B24ED81F6003B1DD8 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

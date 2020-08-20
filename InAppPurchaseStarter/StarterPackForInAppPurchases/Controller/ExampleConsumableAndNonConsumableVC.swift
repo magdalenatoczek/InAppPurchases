@@ -11,9 +11,7 @@ import UIKit
 
 class ExampleConsumableAndNonConsumableVC: UIViewController {
     
-    
-    
-    
+
 
     override func viewDidLoad() {
         super.viewDidLoad()

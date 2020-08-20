@@ -14,7 +14,7 @@ import Foundation
 let notificationPurchaseFromInAppService = "notificationPurchaseFromInAppService"
 let notificationRestoreFromInAppService = "notificationRestoreFromInAppService"
 let notificationFailureFromInAppService = "notificationFailureFromInAppService"
-
+let notificationSubscribeChangeInAppService = "notificationSubscribeChangeInAppService"
 
 
 
