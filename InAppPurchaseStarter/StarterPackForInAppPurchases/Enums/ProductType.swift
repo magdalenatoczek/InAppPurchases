@@ -14,7 +14,7 @@ enum ProductType : String {
     
     case exampleBuyConsumable = "com.popeqapps.inapppurchasestarter.firstType"
     case exampleBuyNonConsumable  = "com.popeqapps.inapppurchasestarter.secondType"
-    case exampleOfAutoRenewingSubscription = "com.popeqapps.inapppurchasestarter.thirdType"
+    case exampleOfSubscription = "com.popeqapps.inapppurchasestarter.thirdType"
     
 
 }
