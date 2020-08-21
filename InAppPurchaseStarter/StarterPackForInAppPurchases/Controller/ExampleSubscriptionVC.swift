@@ -8,13 +8,18 @@
 
 import UIKit
 
-class ExampleSubscriptionVC: UIViewController {
+class ExampleSubscriptionVC: UIViewController, InAppPurchaseServiceDelegate  {
     
     
     var validSubscription = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.isUserInteractionEnabled = false
+  
+        InAppPuchaseService.INSTANCE.inAppPurchaseServiceDelegate = self
+        InAppPuchaseService.INSTANCE.loadProducts()
         
         let status = UserDefaults.standard.bool(forKey: ProductType.exampleOfSubscription.rawValue)
 
@@ -72,5 +77,10 @@ class ExampleSubscriptionVC: UIViewController {
         InAppPuchaseService.INSTANCE.makePurchaseForItem(forProductId: ProductType.exampleOfSubscription.rawValue)
      
     }
+    
+    func loadProductsDelegate() {
+           view.isUserInteractionEnabled = true
+       }
+       
 
 }

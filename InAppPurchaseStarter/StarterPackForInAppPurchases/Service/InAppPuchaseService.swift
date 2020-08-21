@@ -22,26 +22,68 @@
 import Foundation
 import StoreKit
 
+protocol InAppPurchaseServiceDelegate {
+    func loadProductsDelegate()
+}
 
 
-class InAppPuchaseService: SKReceiptRefreshRequest, SKPaymentTransactionObserver {
-   
 
-static let INSTANCE = InAppPuchaseService()
+
+class InAppPuchaseService: SKReceiptRefreshRequest, SKProductsRequestDelegate, SKPaymentTransactionObserver {
+ 
+    static let INSTANCE = InAppPuchaseService()
+    var inAppPurchaseServiceDelegate : InAppPurchaseServiceDelegate?
     
-
     var expirationDate = UserDefaults.standard.value(forKey: "expirationDate") as? Date
 
+    
+    
+    var products = [SKProduct]()
+    var productRequest = SKProductsRequest()
+    
+    let identifiers = [ProductType.exampleBuyConsumable.rawValue,ProductType.exampleBuyNonConsumable.rawValue,ProductType.exampleOfSubscription.rawValue]
+    
+    
+    
 
-    override init(){
-        super.init()
+  fileprivate func fetchProducts(matchingIdentifiers identifiers: [String]) {
+    
+        productRequest.cancel()
+        // Create a set for the product identifiers.
+        let productIdentifiers = Set(identifiers)
+        
+        // Initialize the product request with the above identifiers.
+        productRequest = SKProductsRequest(productIdentifiers: productIdentifiers)
+        productRequest.delegate = self
+        
+        // Send the request to the App Store.
+        productRequest.start()
     }
+    
+    func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
+          self.products = response.products
+              
+              if products.count == 0 {
+                fetchProducts(matchingIdentifiers: identifiers)
+              } else {
+                inAppPurchaseServiceDelegate?.loadProductsDelegate()
+              }
+          }
+    
+    
+    func loadProducts(){
+        
+       fetchProducts(matchingIdentifiers: identifiers)
 
+    }
     
+      
     
-    
+
     func makePurchaseForItem(forProductId productID : String){
         if SKPaymentQueue.canMakePayments() {
+            
+            
             let payment = SKMutablePayment()
             payment.productIdentifier = productID
             SKPaymentQueue.default().add(payment)

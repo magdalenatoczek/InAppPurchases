@@ -9,11 +9,16 @@
 import UIKit
 
 
-class ExampleConsumableVC: UIViewController {
+class ExampleConsumableVC: UIViewController, InAppPurchaseServiceDelegate {
+   
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.isUserInteractionEnabled = false
+
+        InAppPuchaseService.INSTANCE.inAppPurchaseServiceDelegate = self
+        InAppPuchaseService.INSTANCE.loadProducts()
         
         NotificationCenter.default.addObserver(self, selector: #selector(handlePurchase(_:)), name: NSNotification.Name(notificationPurchaseFromInAppService), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleFailure(_:)), name: NSNotification.Name(notificationFailureFromInAppService), object: nil)
@@ -46,4 +51,13 @@ func buyButtonPressed(_sender: Any){
     InAppPuchaseService.INSTANCE.makePurchaseForItem(forProductId: ProductType.exampleBuyConsumable.rawValue)
  
 }
+    
+    func loadProductsDelegate() {
+           view.isUserInteractionEnabled = true
+       }
+       
+    
+    
+    
+    
 }

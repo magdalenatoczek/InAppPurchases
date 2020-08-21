@@ -8,11 +8,17 @@
 
 import UIKit
 
-class ExampleNonConsumableVC: UIViewController {
+class ExampleNonConsumableVC: UIViewController, InAppPurchaseServiceDelegate  {
 
    override func viewDidLoad() {
             super.viewDidLoad()
-            
+            view.isUserInteractionEnabled = false
+                   
+                   
+            InAppPuchaseService.INSTANCE.inAppPurchaseServiceDelegate = self
+            InAppPuchaseService.INSTANCE.loadProducts()
+    
+    
     
             //first check status
             let purchaseStatus = UserDefaults.standard.bool(forKey: ProductType.exampleBuyNonConsumable.rawValue)
@@ -72,5 +78,13 @@ class ExampleNonConsumableVC: UIViewController {
     func restoreButton(_sender: Any){
         InAppPuchaseService.INSTANCE.restore()
     }
+    
+    func loadProductsDelegate() {
+           view.isUserInteractionEnabled = true
+       }
+       
+    
+    
+    
 
     }
