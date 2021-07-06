@@ -43,7 +43,15 @@ class InAppPuchaseService: SKReceiptRefreshRequest, SKProductsRequestDelegate, S
     
     let identifiers = [ProductType.exampleBuyConsumable.rawValue,ProductType.exampleBuyNonConsumable.rawValue,ProductType.exampleOfSubscription.rawValue]
     
+     override init(){
+    super.init()
+    SKPaymentQueue.default().add(self)
+    }
     
+    
+    deinit {
+        SKPaymentQueue.default().remove(self)
+    }
     
 
   fileprivate func fetchProducts(matchingIdentifiers identifiers: [String]) {
